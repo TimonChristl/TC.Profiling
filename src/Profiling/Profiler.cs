@@ -9,7 +9,7 @@ using System.Xml;
 using System.Xml.Linq;
 using Profiling;
 
-namespace Logging
+namespace Profiling
 {
 
 	/// <summary>
@@ -17,12 +17,13 @@ namespace Logging
 	/// </summary>
 	/// <remarks>
 	/// <para>
-	/// To profile, call methods <see cref="Begin"/> and <see cref="End"/> in pairs.
-	/// This creates samples, which are aggregated into nodes in a tree, based on the path of labels that results from nesting pairs of calls.
+	/// To profile, first call <see cref="Start"/>, which starts profiling. Surround regions of your code with calls to <see cref="Begin"/> and <see cref="End"/>. These calls must be
+	/// properly balanced. Each pair of calls creates one sample, these samples are then aggregated into a tree structure based on how Begin/End pairs are nested. To end profiling, call <see cref="Stop"/>.
+	/// To profile again, call <see cref="Clear"/>.
 	/// </para>
 	/// <para>
-	/// To avoid many allocations while profiling, the samples are written to a preallocated array whose size is specified when constructing the Profiler.
-	/// The default size is 1024 * 1024, which equals 32 MB of memory. This memory is re-used when clearing the profiler.
+	/// To reduce allocations while profiling to a minimum, samples are written to a preallocated array whose size is specified when constructing the Profiler.
+	/// The default size is 1024 * 1024, which equals 32 MB of memory. An inactive profiler however consumes no extra memory at all.
 	/// </para>
 	/// </remarks>
 	public sealed class Profiler
@@ -241,8 +242,8 @@ namespace Logging
 
 			foreach(ResultNode child in children)
 			{
-				startTimestamp = DateTimeUtils.Min(startTimestamp, child.Total.StartTimestamp);
-				endTimestamp = DateTimeUtils.Max(endTimestamp, child.Total.EndTimestamp);
+				startTimestamp = DateTimeExtensions.Min(startTimestamp, child.Total.StartTimestamp);
+				endTimestamp = DateTimeExtensions.Max(endTimestamp, child.Total.EndTimestamp);
 				startTicks = Math.Min(startTicks, child.Total.StartTicks);
 				endTicks = Math.Max(endTicks, child.Total.EndTicks);
 			}
@@ -258,8 +259,8 @@ namespace Logging
 			{
 				foreach(ResultSample sample in samples)
 				{
-					startTimestamp = DateTimeUtils.Min(startTimestamp, sample.StartTimestamp);
-					endTimestamp = DateTimeUtils.Max(endTimestamp, sample.EndTimestamp);
+					startTimestamp = DateTimeExtensions.Min(startTimestamp, sample.StartTimestamp);
+					endTimestamp = DateTimeExtensions.Max(endTimestamp, sample.EndTimestamp);
 					startTicks = Math.Min(startTicks, sample.StartTicks);
 					endTicks = Math.Max(endTicks, sample.EndTicks);
 
@@ -267,8 +268,8 @@ namespace Logging
 					long sampleDurationTicks = sample.EndTicks - sample.StartTicks;
 
 					averageDuration += sampleDuration;
-					minDuration = TimeSpanUtils.Min(minDuration, sampleDuration);
-					maxDuration = TimeSpanUtils.Max(maxDuration, sampleDuration);
+					minDuration = TimeSpanExtensions.Min(minDuration, sampleDuration);
+					maxDuration = TimeSpanExtensions.Max(maxDuration, sampleDuration);
 
 					averageDurationTicks += sampleDurationTicks;
 					minDurationTicks = Math.Min(minDurationTicks, sampleDurationTicks);
@@ -302,7 +303,10 @@ namespace Logging
 		/// Returns result data. Reading this property the first time takes longer due to the result data being calculated.
 		/// </summary>
 		/// <remarks>
-		/// It is best to only read from this property after profiling, since calculating results can take some time.
+		/// It is possible to get result data while profiling, but since calculating result data takes time it is recommended
+		/// to only get results after profiling is finished in order to get more accurate results. Calculated result data
+		/// is not recalculated until the next call to <see cref="Begin"/>, <see cref="End"/>, <see cref="Start"/>, <see cref="Stop"/>
+		/// or <see cref="Clear"/>.
 		/// </remarks>
 		public ResultData ResultData
 		{

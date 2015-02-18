@@ -6,15 +6,15 @@ using System.Text;
 namespace Profiling
 {
 
-	internal static class TimeSpanExtensions
+	internal static class DateTimeExtensions
 	{
 
-		public static TimeSpan Min(TimeSpan a, TimeSpan b)
+		public static DateTime Min(DateTime a, DateTime b)
 		{
 			return a < b ? a : b;
 		}
 
-		public static TimeSpan Max(TimeSpan a, TimeSpan b)
+		public static DateTime Max(DateTime a, DateTime b)
 		{
 			return a > b ? a : b;
 		}

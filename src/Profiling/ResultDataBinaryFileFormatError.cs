@@ -7,8 +7,8 @@ namespace Profiling
 {
 
 	/// <summary>
-	/// Thrown by <see cref="Profiling.Profiler.ResultData.FromFileAsBinary"/> and 
-	/// <see cref="Profiling.Profiler.ResultData.FromStreamAsBinary"/> when the contents are not recognized as valid binary result data.
+	/// Thrown by <see cref="Profiling.ResultData.FromFileAsBinary"/> and 
+	/// <see cref="Profiling.ResultData.FromStreamAsBinary"/> when the contents are not recognized as valid binary result data.
 	/// </summary>
 	[Serializable]
 	public class ResultDataBinaryFileFormatException : Exception

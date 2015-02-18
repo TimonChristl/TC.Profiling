@@ -7,7 +7,7 @@ namespace Profiling
 {
 
 	/// <summary>
-	/// Indentation styles for <see cref="Profiling.Profiler.ResultData.ToFileAsText"/> and similar methods.
+	/// Indentation styles for <see cref="Profiling.ResultData.ToFileAsText"/> and similar methods.
 	/// </summary>
 	public enum IndentStyle
 	{

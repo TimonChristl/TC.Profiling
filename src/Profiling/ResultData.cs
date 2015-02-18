@@ -143,7 +143,7 @@ namespace Profiling
 		}
 
 		/// <summary>
-		/// Writes result data in aggregated text format to a <see cref="Logger"/>.
+		/// Writes result data in aggregated text format to a <see cref="Logging.Logger"/>.
 		/// </summary>
 		/// <param name="label"></param>
 		/// <param name="severity"></param>

@@ -51,7 +51,7 @@
     <Compile Include="..\CommonAssemblyInfo.cs">
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="DateTimeUtils.cs" />
+    <Compile Include="DateTimeExtensions.cs" />
     <Compile Include="Profiler.cs" />
     <Compile Include="IndentStyle.cs" />
     <Compile Include="ResultData.cs" />
