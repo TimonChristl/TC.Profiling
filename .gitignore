@@ -1,0 +1,8 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/src/Profiling.v12.suo
+/src/Profiling/Profiling.csproj.user
+/src/Profiling/bin
+/src/Profiling/obj
