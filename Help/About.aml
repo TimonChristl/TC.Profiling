@@ -3,10 +3,10 @@
   <developerConceptualDocument xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5" xmlns:xlink="http://www.w3.org/1999/xlink">
     <introduction>
 		<para>
-			The Profiling library is a class library for .NET 4.5 and above that provides a simple profiler which requires code to be manually instrumented, but has very low impact in return.
+			The TC.Profiling library is a class library for .NET 4.5 and above that provides a simple profiler which requires code to be manually instrumented, but has very low impact in return.
 		</para>
 		<para>
-			This library has a dependency on my <application>Logging</application> library.
+			This library has a dependency on my <application>TC.Logging</application> library.
 		</para>
 	</introduction>
     <relatedTopics/>

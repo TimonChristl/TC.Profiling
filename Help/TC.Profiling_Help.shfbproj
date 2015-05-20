@@ -17,7 +17,7 @@
     <!-- SHFB properties -->
     <FrameworkVersion>.NET Framework 4.5</FrameworkVersion>
     <OutputPath>Output\</OutputPath>
-    <HtmlHelpName>Profiling_1_0_0_0_Help</HtmlHelpName>
+    <HtmlHelpName>TC.Profiling_1_0_0_0_Help</HtmlHelpName>
     <Language>en-US</Language>
     <BuildAssemblerVerbosity>OnlyWarningsAndErrors</BuildAssemblerVerbosity>
     <HelpFileFormat>HtmlHelp1</HelpFileFormat>
@@ -26,14 +26,14 @@
     <DisableCodeBlockComponent>False</DisableCodeBlockComponent>
     <CppCommentsFixup>False</CppCommentsFixup>
     <CleanIntermediates>True</CleanIntermediates>
-    <BuildLogFile>Profiling_Help_Log.log</BuildLogFile>
+    <BuildLogFile>TC.Profiling_Help_Log.log</BuildLogFile>
     <SyntaxFilters>Standard</SyntaxFilters>
     <SdkLinkTarget>Blank</SdkLinkTarget>
     <RootNamespaceContainer>True</RootNamespaceContainer>
     <PresentationStyle>VS2013</PresentationStyle>
     <Preliminary>False</Preliminary>
     <NamingMethod>HashedMemberName</NamingMethod>
-    <HelpTitle>Profiling 1.0.0.0 Help file</HelpTitle>
+    <HelpTitle>TC.Profiling 1.0.0.0 Help file</HelpTitle>
     <ContentPlacement>AboveNamespaces</ContentPlacement>
     <FeedbackEMailLinkText>Feedback</FeedbackEMailLinkText>
     <FeedbackEMailAddress>timonchristl%40gmail.com</FeedbackEMailAddress>
@@ -48,7 +48,7 @@
     <TocParentVersion>100</TocParentVersion>
     <TopicVersion>100</TopicVersion>
     <TocOrder>-1</TocOrder>
-    <ProductTitle>Profiling 1.0.0.0</ProductTitle>
+    <ProductTitle>TC.Profiling 1.0.0.0</ProductTitle>
     <VendorName>Timon Christl</VendorName>
     <MSHelpViewerSdkLinkType>Id</MSHelpViewerSdkLinkType>
     <CatalogVersion>100</CatalogVersion>
@@ -56,18 +56,18 @@
     <VisibleItems>Attributes, ExplicitInterfaceImplementations, InheritedMembers, InheritedFrameworkMembers, Protected, SealedProtected</VisibleItems>
     <WorkingPath>Working\</WorkingPath>
     <DocumentationSources>
-      <DocumentationSource sourceFile="..\src\Profiling\bin\Release\Profiling.dll" />
-      <DocumentationSource sourceFile="..\src\Profiling\bin\Release\Profiling.xml" />
-      <DocumentationSource sourceFile="..\..\Logging\src\Logging\bin\Release\Logging.XML" />
-      <DocumentationSource sourceFile="..\..\Logging\src\Logging\bin\Release\Logging.dll" />
+      <DocumentationSource sourceFile="..\src\TC.Profiling\bin\Release\TC.Profiling.dll" />
+      <DocumentationSource sourceFile="..\src\TC.Profiling\bin\Release\TC.Profiling.xml" />
+      <DocumentationSource sourceFile="..\src\TC.Profiling\bin\Release\TC.Logging.dll" />
+      <DocumentationSource sourceFile="..\src\TC.Profiling\bin\Release\TC.Logging.xml" />
     </DocumentationSources>
     <MissingTags>AutoDocumentCtors, AutoDocumentDispose</MissingTags>
     <RootNamespaceTitle>API Reference</RootNamespaceTitle>
     <ApiFilter>
-      <Filter entryType="Namespace" fullName="Logging" isExposed="False" />
-<Filter entryType="Namespace" fullName="Logging.Formatters" isExposed="False" />
-<Filter entryType="Namespace" fullName="Logging.Sinks" isExposed="False" />
-<Filter entryType="Namespace" fullName="Logging.Sources" isExposed="False" /></ApiFilter>
+      <Filter entryType="Namespace" fullName="TC.Logging" isExposed="False" />
+<Filter entryType="Namespace" fullName="TC.Logging.Formatters" isExposed="False" />
+<Filter entryType="Namespace" fullName="TC.Logging.Sinks" isExposed="False" />
+<Filter entryType="Namespace" fullName="TC.Logging.Sources" isExposed="False" /></ApiFilter>
     <ComponentConfigurations />
     <HelpAttributes />
     <NamespaceSummaries />

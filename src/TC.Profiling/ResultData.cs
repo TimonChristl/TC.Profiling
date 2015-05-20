@@ -6,7 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Xml.Linq;
-using Logging;
+using TC.Logging;
 
 namespace TC.Profiling
 {
@@ -143,13 +143,13 @@ namespace TC.Profiling
 		}
 
 		/// <summary>
-		/// Writes result data in aggregated text format to a <see cref="Logging.Logger"/>.
+		/// Writes result data in aggregated text format to a <see cref="TC.Logging.Logger"/>.
 		/// </summary>
 		/// <param name="label"></param>
 		/// <param name="severity"></param>
 		/// <param name="logger"></param>
 		/// <param name="indentStyle"></param>
-		public void ToLogger(string label, Severity severity, Logger logger, IndentStyle indentStyle = IndentStyle.Unicode)
+		public void ToLogger(string label, TC.Logging.Severity severity, TC.Logging.Logger logger, IndentStyle indentStyle = IndentStyle.Unicode)
 		{
 			StringBuilder sb = new StringBuilder();
 

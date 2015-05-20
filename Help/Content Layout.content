@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Topics>
   <Topic id="56c2cf45-a9e8-4c16-9b35-ac827d17b300" visible="True" isSelected="true" />
-  <Topic id="c6ae5821-2a5d-4372-a113-3579b9781045" visible="False" isMSHVRoot="true" title="Logging Library">
+  <Topic id="c6ae5821-2a5d-4372-a113-3579b9781045" visible="False" isMSHVRoot="true" title="TC.Profiling Library">
     <HelpKeywords>
-      <HelpKeyword index="K" term="Logging Library" />
+      <HelpKeyword index="K" term="Profiling Library" />
     </HelpKeywords>
   </Topic>
 </Topics>

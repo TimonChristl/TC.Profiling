@@ -14,3 +14,10 @@
 /src/TC.Profiling.v12.suo
 /src/T.Utils.Tests
 /src/ProfileViewer
+/Help/TC.Profiling_Help_Log.log
+/src/TC.Profiling_WithHelp.v12.suo
+/src/TC.Profiling/obj/Release
+/src/TC.Profiling/bin
+/src/packages/TC.Logging.1.0.0/lib/net40/TC.Logging.xml
+/src/packages/TC.Logging.1.0.0/lib/net40/TC.Logging.dll
+/src/packages/TC.Logging.1.0.0/TC.Logging.1.0.0.nupkg
