@@ -3,18 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Profiling
+namespace TC.Profiling
 {
 
-	internal static class DateTimeExtensions
+	internal static class TimeSpanExtensions
 	{
 
-		public static DateTime Min(DateTime a, DateTime b)
+		public static TimeSpan Min(TimeSpan a, TimeSpan b)
 		{
 			return a < b ? a : b;
 		}
 
-		public static DateTime Max(DateTime a, DateTime b)
+		public static TimeSpan Max(TimeSpan a, TimeSpan b)
 		{
 			return a > b ? a : b;
 		}

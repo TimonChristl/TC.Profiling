@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Profiling
+namespace TC.Profiling
 {
 
 	/// <summary>
-	/// Thrown by <see cref="Profiling.ResultData.FromFileAsBinary"/> and 
-	/// <see cref="Profiling.ResultData.FromStreamAsBinary"/> when the contents are not recognized as valid binary result data.
+	/// Thrown by <see cref="TC.Profiling.ResultData.FromFileAsBinary"/> and 
+	/// <see cref="TC.Profiling.ResultData.FromStreamAsBinary"/> when the contents are not recognized as valid binary result data.
 	/// </summary>
 	[Serializable]
 	public class ResultDataBinaryFileFormatException : Exception

@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31101.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TC.Profiling", "TC.Profiling\Profiling.csproj", "{2FFCDC78-C616-42BA-A52A-AC86B7BFC3E8}"
+EndProject
+Project("{7CF6DF6D-3B04-46F8-A40B-537D21BCA0B4}") = "ProfilingHelp", "..\Help\ProfilingHelp.shfbproj", "{34CC9B28-215E-4ABA-AF3E-6BD830B7A995}"
+	ProjectSection(ProjectDependencies) = postProject
+		{2FFCDC78-C616-42BA-A52A-AC86B7BFC3E8} = {2FFCDC78-C616-42BA-A52A-AC86B7BFC3E8}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2FFCDC78-C616-42BA-A52A-AC86B7BFC3E8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2FFCDC78-C616-42BA-A52A-AC86B7BFC3E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2FFCDC78-C616-42BA-A52A-AC86B7BFC3E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2FFCDC78-C616-42BA-A52A-AC86B7BFC3E8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{34CC9B28-215E-4ABA-AF3E-6BD830B7A995}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{34CC9B28-215E-4ABA-AF3E-6BD830B7A995}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{34CC9B28-215E-4ABA-AF3E-6BD830B7A995}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{34CC9B28-215E-4ABA-AF3E-6BD830B7A995}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

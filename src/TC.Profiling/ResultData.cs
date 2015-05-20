@@ -8,7 +8,7 @@ using System.Text;
 using System.Xml.Linq;
 using Logging;
 
-namespace Profiling
+namespace TC.Profiling
 {
 
 	/// <summary>

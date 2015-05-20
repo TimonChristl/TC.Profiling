@@ -7,8 +7,8 @@
     <ProjectGuid>{2FFCDC78-C616-42BA-A52A-AC86B7BFC3E8}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Profiling</RootNamespace>
-    <AssemblyName>Profiling</AssemblyName>
+    <RootNamespace>TC.Profiling</RootNamespace>
+    <AssemblyName>TC.Profiling</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -32,12 +32,12 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Release\Profiling.XML</DocumentationFile>
+    <DocumentationFile>bin\Release\TC.Profiling.XML</DocumentationFile>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Logging">
-      <HintPath>..\..\..\Logging\src\Logging\bin\Release\Logging.dll</HintPath>
+    <Reference Include="TC.Logging">
+      <HintPath>..\..\..\TC.Logging\src\TC.Logging\bin\Release\TC.Logging.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

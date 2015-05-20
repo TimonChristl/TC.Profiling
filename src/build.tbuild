@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Script xmlns="urn:TBuild"
+        xmlns:core="urn:TBuild.Plugin.Core"
+        xmlns:msbuild="urn:TBuild.Plugin.MsBuild"
+        xmlns:nsis="urn:TBuild.Plugin.Nsis"
+        xmlns:fs="urn:TBuild.Plugin.Filesystem"
+        MinRequiredVersion="1.9.9.0">
+    <Properties>
+        <Property Name="Version" Value="1.0.0"/>
+    </Properties>
+    <Steps>
+        <fs:ReadTextFile Filename="${TBuild.ScriptDir}\CommonAssemblyInfo.cs.in" Property="Temp"/>
+        <core:RegexSearchAndReplace Property="Temp" Pattern="@VERSION@" Replacement="${Version}.${ENV:BUILD_NUMBER}" />
+        <fs:WriteTextFile Filename="${TBuild.ScriptDir}\CommonAssemblyInfo.cs" Property="${Temp}"/>
+
+        <msbuild:MsBuild ProjectFile="${TBuild.ScriptDir}\TC.Profiling.sln" Configuration="Release" Platform="Any CPU" Targets="Build"/>
+
+        <fs:ReadTextFile Filename="${TBuild.ScriptDir}\TC.Profiling.nuspec.in" Property="Temp"/>
+        <core:RegexSearchAndReplace Property="Temp" Pattern="@VERSION@" Replacement="${Version}" />
+        <fs:WriteTextFile Filename="${TBuild.ScriptDir}\TC.Profiling.nuspec" Property="${Temp}"/>
+
+        <core:Exec Filename="${Exe.NuGet}"
+                   Arguments="pack ${TBuild.ScriptDir}\TC.Profiling.nuspec"
+                   WorkingDirectory="${TBuild.ScriptDir}"
+                   UseShellExecute="false"
+                   />
+    </Steps>
+</Script>

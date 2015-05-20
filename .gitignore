@@ -9,3 +9,8 @@
 /Help/Profiling_Help_Log.log
 /Help/ProfilingHelp.shfbproj_Timon
 /Help/Output
+/ProfilingVisualizer
+/src/TC.Profiling/obj/Debug
+/src/TC.Profiling.v12.suo
+/src/T.Utils.Tests
+/src/ProfileViewer

@@ -4,12 +4,12 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
-namespace Profiling
+namespace TC.Profiling
 {
 
 	/// <summary>
 	/// A single sample of profiling result data. A sample corresponds to a single pair of
-	/// invocations of <see cref="Profiling.Profiler.Begin(string)"/> and <see cref="Profiling.Profiler.End()"/>,
+	/// invocations of <see cref="TC.Profiling.Profiler.Begin(string)"/> and <see cref="TC.Profiling.Profiler.End()"/>,
 	/// while a node can correspond to many such pairs (e.g. in loops).
 	/// </summary>
 	public class ResultSample

@@ -7,9 +7,9 @@ using System.Linq;
 using System.Text;
 using System.Xml;
 using System.Xml.Linq;
-using Profiling;
+using TC.Profiling;
 
-namespace Profiling
+namespace TC.Profiling
 {
 
 	/// <summary>
@@ -19,11 +19,12 @@ namespace Profiling
 	/// <para>
 	/// To profile, first call <see cref="Start"/>, which starts profiling. Surround regions of your code with calls to <see cref="Begin"/> and <see cref="End"/>. These calls must be
 	/// properly balanced. Each pair of calls creates one sample, these samples are then aggregated into a tree structure based on how Begin/End pairs are nested. To end profiling, call <see cref="Stop"/>.
-	/// To profile again, call <see cref="Clear"/>.
+	/// Before profiling again, call <see cref="Clear"/>, otherwise measurements will not be meaningful.
 	/// </para>
 	/// <para>
-	/// To reduce allocations while profiling to a minimum, samples are written to a preallocated array whose size is specified when constructing the Profiler.
-	/// The default size is 1024 * 1024, which equals 32 MB of memory. An inactive profiler however consumes no extra memory at all.
+	/// To reduce allocations while profiling to a minimum, samples are written to a preallocated array whose size is specified when constructing a Profiler.
+	/// The default size is 1024 * 1024, which equals 32 MB of memory. Note that an inactive profiler does not allocate this memory and always returns immediately in all methods, so an inactive
+	/// profiler is as cheap as it gets.
 	/// </para>
 	/// </remarks>
 	public sealed class Profiler

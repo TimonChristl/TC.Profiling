@@ -4,11 +4,11 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
-namespace Profiling
+namespace TC.Profiling
 {
 
 	/// <summary>
-	/// Statistics over the samples of a <see cref="ResultNode"/>.
+	/// Statistics over the samples of a <see cref="TC.Profiling.ResultNode"/>.
 	/// </summary>
 	public sealed class ResultTotalSample : ResultSample
 	{

@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Profiling
+namespace TC.Profiling
 {
 
 	/// <summary>
-	/// Indentation styles for <see cref="Profiling.ResultData.ToFileAsText"/> and similar methods.
+	/// Indentation styles for <see cref="TC.Profiling.ResultData.ToFileAsText"/> and similar methods.
 	/// </summary>
 	public enum IndentStyle
 	{
