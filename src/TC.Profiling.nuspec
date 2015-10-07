@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
     <metadata>
         <id>TC.Profiling</id>
-        <version>1.0.0</version>
+        <version>1.0.1</version>
         <authors>Timon Christl</authors>
         <owners>Timon Christl</owners>
         <projectUrl>https://github.com/TimonChristl/TC.Profiling</projectUrl>
@@ -11,7 +11,7 @@
         <releaseNotes />
         <copyright>©2015 by Timon Christl</copyright>
         <dependencies>
-            <dependency id="TC.Logging" version="1.0.0" />
+            <dependency id="TC.Logging" version="1.0.1" />
         </dependencies>
     </metadata>
     <files>

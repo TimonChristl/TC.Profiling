@@ -11,7 +11,7 @@
         <releaseNotes />
         <copyright>©2015 by Timon Christl</copyright>
         <dependencies>
-            <dependency id="TC.Logging" version="1.0.0" />
+            <dependency id="TC.Logging" version="1.0.1" />
         </dependencies>
     </metadata>
     <files>
