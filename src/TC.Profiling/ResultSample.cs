@@ -111,24 +111,24 @@ namespace TC.Profiling
 			get { return duration; }
 		}
 
-		/// <summary>
-		/// Start in Stopwatch ticks.
-		/// </summary>
-		public long StartTicks
+        /// <summary>
+        /// Start in TimeSpan ticks.
+        /// </summary>
+        public long StartTicks
 		{
 			get { return startTicks; }
 		}
 
-		/// <summary>
-		/// End in Stopwatch ticks.
-		/// </summary>
-		public long EndTicks
+        /// <summary>
+        /// End in TimeSpan ticks.
+        /// </summary>
+        public long EndTicks
 		{
 			get { return endTicks; }
 		}
 
 		/// <summary>
-		/// Duration in Stopwatch ticks.
+		/// Duration in TimeSpan ticks.
 		/// </summary>
 		public long DurationTicks
 		{

@@ -118,7 +118,7 @@ namespace TC.Profiling
 				return;
 
 			DateTime timestamp = DateTime.UtcNow;
-			long ticks = rawData.Stopwatch.ElapsedTicks;
+			long ticks = StopwatchTicksToTimeSpanTicks(rawData.Stopwatch.ElapsedTicks);
 
 			rawData.LabelStack.Push(label);
 
@@ -150,7 +150,7 @@ namespace TC.Profiling
 			RawNode node = rawData.NodeStack.Pop();
 
 			DateTime timestamp = DateTime.UtcNow;
-			long ticks = rawData.Stopwatch.ElapsedTicks;
+			long ticks = StopwatchTicksToTimeSpanTicks(rawData.Stopwatch.ElapsedTicks);
 
 			int sampleIndex = node.SampleIndices[node.SampleIndices.Count - 1];
 
@@ -162,11 +162,16 @@ namespace TC.Profiling
 			resultData = null;
 		}
 
-		#endregion
+        #endregion
 
-		#region Private methods
+        #region Private methods
 
-		private RawNode EnsureRawNodesForPath(IEnumerable<string> labelStack)
+        private long StopwatchTicksToTimeSpanTicks(long stopwatchTicks)
+        {
+            return stopwatchTicks / (Stopwatch.Frequency / (10 * 1000 * 1000));
+        }
+
+        private RawNode EnsureRawNodesForPath(IEnumerable<string> labelStack)
 		{
 			List<RawNode> children = new List<RawNode>();
 			if(rawData.RootNode != null)

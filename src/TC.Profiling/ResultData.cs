@@ -21,9 +21,9 @@ namespace TC.Profiling
 
 		private ResultNode rootNode;
 
-		private static readonly Guid binaryFileV1Marker = new Guid("EE1F4A3C-1C03-4A27-A83B-ED77A02A59FE");
+		private static readonly Guid binaryFileV2Marker = new Guid("{F19C921C-35EC-4BBE-948B-59B6AC78A86A}");
 
-		private static readonly Dictionary<IndentStyle, string[]> indentChars = new Dictionary<IndentStyle, string[]>()
+        private static readonly Dictionary<IndentStyle, string[]> indentChars = new Dictionary<IndentStyle, string[]>()
 		{
 			{
 				IndentStyle.Unicode,
@@ -479,7 +479,7 @@ namespace TC.Profiling
 			level = 0;
 			Stack<bool> indentStack = new Stack<bool>();
 
-			double stopWatchTicksPerMillisecond = Stopwatch.Frequency / 1000000.0;
+            double ticksPerMicrosecond = 10.0;
 
 			Traverse(
 				(node, index, count) =>
@@ -494,15 +494,15 @@ namespace TC.Profiling
 							MakeIndentation(level, indentStack, indentChars[indentStyle]),
 							node.Label.PadRight(totalMaxLabelLength + (totalMaxLevel - level) * indentWidth),
 							node.Total.Duration.TotalMilliseconds.ToString("f1", NumberFormatInfo.InvariantInfo).PadLeft(millisecondsWidth, ' '),
-							(node.Total.DurationTicks / stopWatchTicksPerMillisecond).ToString("f1", NumberFormatInfo.InvariantInfo).PadLeft(microsecondsWidth, ' '),
+							(node.Total.DurationTicks / ticksPerMicrosecond).ToString("f1", NumberFormatInfo.InvariantInfo).PadLeft(microsecondsWidth, ' '),
 							percentage.ToString("p1", NumberFormatInfo.InvariantInfo).PadLeft(percentageWidth, ' '),
 							node.Samples.Length.ToString().PadLeft(hitCountWidth, ' '),
 							node.Total.AverageDuration.TotalMilliseconds.ToString("f1", NumberFormatInfo.InvariantInfo).PadLeft(millisecondsWidth, ' '),
-							(node.Total.AverageDurationTicks / stopWatchTicksPerMillisecond).ToString("f1", NumberFormatInfo.InvariantInfo).PadLeft(microsecondsWidth, ' '),
+							(node.Total.AverageDurationTicks / ticksPerMicrosecond).ToString("f1", NumberFormatInfo.InvariantInfo).PadLeft(microsecondsWidth, ' '),
 							node.Total.MinDuration.TotalMilliseconds.ToString("f1", NumberFormatInfo.InvariantInfo).PadLeft(millisecondsWidth, ' '),
-							(node.Total.MinDurationTicks / stopWatchTicksPerMillisecond).ToString("f1", NumberFormatInfo.InvariantInfo).PadLeft(microsecondsWidth, ' '),
+							(node.Total.MinDurationTicks / ticksPerMicrosecond).ToString("f1", NumberFormatInfo.InvariantInfo).PadLeft(microsecondsWidth, ' '),
 							node.Total.MaxDuration.TotalMilliseconds.ToString("f1", NumberFormatInfo.InvariantInfo).PadLeft(millisecondsWidth, ' '),
-							(node.Total.MaxDurationTicks / stopWatchTicksPerMillisecond).ToString("f1", NumberFormatInfo.InvariantInfo).PadLeft(microsecondsWidth, ' ')
+							(node.Total.MaxDurationTicks / ticksPerMicrosecond).ToString("f1", NumberFormatInfo.InvariantInfo).PadLeft(microsecondsWidth, ' ')
 						)
 					);
 					level++;
@@ -517,7 +517,7 @@ namespace TC.Profiling
 
 		private void SerializeBinary(BinaryWriter binaryWriter)
 		{
-			binaryWriter.Write(binaryFileV1Marker.ToByteArray());
+			binaryWriter.Write(binaryFileV2Marker.ToByteArray());
 			rootNode.Serialize(binaryWriter);
 		}
 
@@ -527,7 +527,7 @@ namespace TC.Profiling
 
 			binaryReader.Read(marker, 0, 16);
 			Guid readGuid = new Guid(marker);
-			if(readGuid != binaryFileV1Marker)
+			if(readGuid != binaryFileV2Marker)
 				throw new ResultDataBinaryFileFormatException();
 
 			ResultNode rootNode = ResultNode.Unserialize(binaryReader);

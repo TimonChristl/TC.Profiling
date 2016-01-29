@@ -134,26 +134,26 @@ namespace TC.Profiling
 			get { return maxDuration; }
 		}
 
-		/// <summary>
-		/// Average duration among samples in Stopwatch ticks.
-		/// </summary>
-		public long AverageDurationTicks
+        /// <summary>
+        /// Average duration among samples in TimeSpan ticks.
+        /// </summary>
+        public long AverageDurationTicks
 		{
 			get { return averageDurationTicks; }
 		}
 
-		/// <summary>
-		/// Minimum duration among samples in Stopwatch ticks.
-		/// </summary>
-		public long MinDurationTicks
+        /// <summary>
+        /// Minimum duration among samples in TimeSpan ticks.
+        /// </summary>
+        public long MinDurationTicks
 		{
 			get { return minDurationTicks; }
 		}
 
-		/// <summary>
-		/// Maximum duration among samples in Stopwatch ticks.
-		/// </summary>
-		public long MaxDurationTicks
+        /// <summary>
+        /// Maximum duration among samples in TimeSpan ticks.
+        /// </summary>
+        public long MaxDurationTicks
 		{
 			get { return maxDurationTicks; }
 		}
