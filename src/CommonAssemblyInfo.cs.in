@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 #endif
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("TC.Profiling")]
-[assembly: AssemblyCopyright("©2015 by Timon Christl")]
+[assembly: AssemblyCopyright("©2015-2016 by Timon Christl")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
