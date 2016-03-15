@@ -168,7 +168,7 @@ namespace TC.Profiling
 
         private long StopwatchTicksToTimeSpanTicks(long stopwatchTicks)
         {
-            return stopwatchTicks / (Stopwatch.Frequency / (10 * 1000 * 1000));
+            return stopwatchTicks * (10 * 1000 * 1000) / Stopwatch.Frequency;
         }
 
         private RawNode EnsureRawNodesForPath(IEnumerable<string> labelStack)
