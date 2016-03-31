@@ -4,7 +4,7 @@
         xmlns:msbuild="urn:TBuild.Plugin.MsBuild"
         xmlns:nsis="urn:TBuild.Plugin.Nsis"
         xmlns:fs="urn:TBuild.Plugin.Filesystem"
-        MinRequiredVersion="1.9.9.0">
+        MinRequiredVersion="1.9.12.0">
     <Properties>
         <Property Name="Version" Value="1.0.2"/>
     </Properties>
@@ -24,6 +24,8 @@
         <fs:ReadTextFile Filename="${TBuild.ScriptDir}\TC.Profiling.Sources.nuspec.in" Property="Temp"/>
         <core:RegexSearchAndReplace Property="Temp" Pattern="@VERSION@" Replacement="${Version}" />
         <fs:WriteTextFile Filename="${TBuild.ScriptDir}\TC.Profiling.Sources.nuspec" Property="${Temp}"/>
+
+        <fs:DeleteFiles Directory="${TBuild.ScriptDir}" Pattern="*.nupkg"/>
 
         <core:Exec Filename="${Exe.NuGet}"
                    Arguments="pack ${TBuild.ScriptDir}\TC.Profiling.nuspec"
