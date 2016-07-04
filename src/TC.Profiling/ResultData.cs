@@ -90,11 +90,12 @@ namespace TC.Profiling
 			Serialize((line) => streamWriter.WriteLine(line), indentStyle);
 		}
 
-		/// <summary>
-		/// Writes result data in binary format to a file.
-		/// </summary>
-		/// <param name="filename"></param>
-		public void ToFileAsBinary(string filename)
+        /// <summary>
+        /// Writes result data in binary format to a file.
+        /// </summary>
+        /// <param name="filename"></param>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times")]
+        public void ToFileAsBinary(string filename)
 		{
 			using(FileStream stream = File.Open(filename, FileMode.Create, FileAccess.Write, FileShare.Read))
 			using(BinaryWriter binaryWriter = new BinaryWriter(stream))
@@ -115,12 +116,13 @@ namespace TC.Profiling
 			}
 		}
 
-		/// <summary>
-		/// Reads result data in binary format from a file.
-		/// </summary>
-		/// <param name="filename"></param>
-		/// <returns></returns>
-		public static ResultData FromFileAsBinary(string filename)
+        /// <summary>
+        /// Reads result data in binary format from a file.
+        /// </summary>
+        /// <param name="filename"></param>
+        /// <returns></returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times")]
+        public static ResultData FromFileAsBinary(string filename)
 		{
 			using(FileStream stream = File.Open(filename, FileMode.Open, FileAccess.Read, FileShare.Read))
 			using(BinaryReader binaryReader = new BinaryReader(stream, Encoding.UTF8))

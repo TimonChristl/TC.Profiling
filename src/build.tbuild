@@ -6,7 +6,7 @@
         xmlns:fs="urn:TBuild.Plugin.Filesystem"
         MinRequiredVersion="1.9.12.0">
     <Properties>
-        <Property Name="Version" Value="1.0.2"/>
+        <Property Name="Version" Value="1.0.3"/>
     </Properties>
     <Steps>
         <fs:ReadTextFile Filename="${TBuild.ScriptDir}\CommonAssemblyInfo.cs.in" Property="Temp"/>
