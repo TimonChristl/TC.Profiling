@@ -396,128 +396,157 @@ namespace TC.Profiling
 			return sb.ToString();
 		}
 
-		#endregion
+        #endregion
 
-		#region Private methods
+        #region Private methods
 
-		private void Serialize(Action<string> lineAction, IndentStyle indentStyle)
-		{
-			#region Determine max level and max label length
+        private void Serialize(Action<string> lineAction, IndentStyle indentStyle)
+        {
+            #region Determine max level and max label length
 
-			int level = 0;
+            int level = 0;
 
-			int totalMaxLevel = 0;
-			int totalMaxLabelLength = 0;
+            int totalMaxLevel = 0;
+            int totalMaxLabelLength = 0;
 
-			Traverse((node, index, count) =>
-				{
-					level++;
+            Traverse((node, index, count) =>
+                {
+                    level++;
 
-					totalMaxLevel = Math.Max(totalMaxLevel, level);
-					totalMaxLabelLength = Math.Max(totalMaxLabelLength, node.Label.Length);
-				},
-				(node, index, count) =>
-				{
-					level--;
-				}
-			);
+                    totalMaxLevel = Math.Max(totalMaxLevel, level);
+                    totalMaxLabelLength = Math.Max(totalMaxLabelLength, node.Label.Length);
+                },
+                (node, index, count) =>
+                {
+                    level--;
+                }
+            );
 
-			#endregion
+            #endregion
 
-			#region Write header
+            #region Write header
 
-			const int indentWidth = 3;
-			const int millisecondsWidth = 8;
-			const int microsecondsWidth = 12;
-			const int hitCountWidth = 5;
-			const int percentageWidth = 7;
+            const int indentWidth = 3;
+            const int millisecondsWidth = 8;
+            const int microsecondsWidth = 12;
+            const int hitCountWidth = 5;
+            const int percentageWidth = 7;
 
-			int outputWidth = totalMaxLevel * indentWidth + totalMaxLabelLength
-				+ 2
-				+ millisecondsWidth
-				+ 2
-				+ microsecondsWidth
-				+ 2
-				+ percentageWidth
-				+ 2
-				+ hitCountWidth
-				+ 2
-				+ millisecondsWidth
-				+ 2
-				+ microsecondsWidth
-				+ 2
-				+ millisecondsWidth
-				+ 2
-				+ microsecondsWidth
-				+ 2
-				+ millisecondsWidth
-				+ 2
-				+ microsecondsWidth
-				;
+            int outputWidth = totalMaxLevel * indentWidth + totalMaxLabelLength
+                + 2
+                + millisecondsWidth
+                + 2
+                + microsecondsWidth
+                + 2
+                + percentageWidth
+                + 2
+                + hitCountWidth
+                + 2
+                + millisecondsWidth
+                + 2
+                + microsecondsWidth
+                + 2
+                + millisecondsWidth
+                + 2
+                + microsecondsWidth
+                + 2
+                + millisecondsWidth
+                + 2
+                + microsecondsWidth
+                ;
 
-			lineAction(
-				string.Format(
-					"{0}{1}  {2}  {3}  {4}  {5}  {6}  {7}  {8}  {9}  {10}  {11}",
-					"",
-					"Label".PadRight(totalMaxLabelLength + totalMaxLevel * indentWidth),
-					"ms".PadLeft(millisecondsWidth, ' '),
-					"µs".PadLeft(microsecondsWidth, ' '),
-					"%".PadLeft(percentageWidth, ' '),
-					"hits".PadLeft(hitCountWidth, ' '),
-					"Avg ms".PadLeft(millisecondsWidth, ' '),
-					"Avg µs".PadLeft(microsecondsWidth, ' '),
-					"Min ms".PadLeft(millisecondsWidth, ' '),
-					"Min µs".PadLeft(microsecondsWidth, ' '),
-					"Max ms".PadLeft(millisecondsWidth, ' '),
-					"Max µs".PadLeft(microsecondsWidth, ' ')
-				)
-			);
-			lineAction("".PadRight(outputWidth, '='));
+            lineAction(
+                string.Format(
+                    "{0}{1}  {2}  {3}  {4}  {5}  {6}  {7}  {8}  {9}  {10}  {11}",
+                    "",
+                    "Label".PadRight(totalMaxLabelLength + totalMaxLevel * indentWidth),
+                    "ms".PadLeft(millisecondsWidth, ' '),
+                    "µs".PadLeft(microsecondsWidth, ' '),
+                    "%".PadLeft(percentageWidth, ' '),
+                    "hits".PadLeft(hitCountWidth, ' '),
+                    "Avg ms".PadLeft(millisecondsWidth, ' '),
+                    "Avg µs".PadLeft(microsecondsWidth, ' '),
+                    "Min ms".PadLeft(millisecondsWidth, ' '),
+                    "Min µs".PadLeft(microsecondsWidth, ' '),
+                    "Max ms".PadLeft(millisecondsWidth, ' '),
+                    "Max µs".PadLeft(microsecondsWidth, ' ')
+                )
+            );
+            lineAction("".PadRight(outputWidth, '='));
 
-			#endregion
+            #endregion
 
-			#region Write body
+            #region Write body
 
-			level = 0;
-			Stack<bool> indentStack = new Stack<bool>();
+            level = 0;
+            Stack<bool> indentStack = new Stack<bool>();
 
             double ticksPerMicrosecond = 10.0;
 
-			Traverse(
-				(node, index, count) =>
-				{
-					indentStack.Push(index == count - 1);
+            Traverse(
+                (node, index, count) =>
+                {
+                    indentStack.Push(index == count - 1);
 
-					double percentage = (double)node.Total.DurationTicks / rootNode.Total.DurationTicks;
+                    double percentage = (double)node.Total.DurationTicks / rootNode.Total.DurationTicks;
 
-					lineAction(
-						string.Format(
-							"{0}{1}  {2}  {3}  {4}  {5}  {6}  {7}  {8}  {9}  {10}  {11}",
-							MakeIndentation(level, indentStack, indentChars[indentStyle]),
-							node.Label.PadRight(totalMaxLabelLength + (totalMaxLevel - level) * indentWidth),
-							node.Total.Duration.TotalMilliseconds.ToString("f1", NumberFormatInfo.InvariantInfo).PadLeft(millisecondsWidth, ' '),
-							(node.Total.DurationTicks / ticksPerMicrosecond).ToString("f1", NumberFormatInfo.InvariantInfo).PadLeft(microsecondsWidth, ' '),
-							percentage.ToString("p1", NumberFormatInfo.InvariantInfo).PadLeft(percentageWidth, ' '),
-							node.Samples.Length.ToString().PadLeft(hitCountWidth, ' '),
-							node.Total.AverageDuration.TotalMilliseconds.ToString("f1", NumberFormatInfo.InvariantInfo).PadLeft(millisecondsWidth, ' '),
-							(node.Total.AverageDurationTicks / ticksPerMicrosecond).ToString("f1", NumberFormatInfo.InvariantInfo).PadLeft(microsecondsWidth, ' '),
-							node.Total.MinDuration.TotalMilliseconds.ToString("f1", NumberFormatInfo.InvariantInfo).PadLeft(millisecondsWidth, ' '),
-							(node.Total.MinDurationTicks / ticksPerMicrosecond).ToString("f1", NumberFormatInfo.InvariantInfo).PadLeft(microsecondsWidth, ' '),
-							node.Total.MaxDuration.TotalMilliseconds.ToString("f1", NumberFormatInfo.InvariantInfo).PadLeft(millisecondsWidth, ' '),
-							(node.Total.MaxDurationTicks / ticksPerMicrosecond).ToString("f1", NumberFormatInfo.InvariantInfo).PadLeft(microsecondsWidth, ' ')
-						)
-					);
-					level++;
-				},
-				(node, index, count) => { level--; indentStack.Pop(); }
-			);
+                    lineAction(
+                        string.Format(
+                            "{0}{1}  {2}  {3}  {4}  {5}  {6}  {7}  {8}  {9}  {10}  {11}  {12}",
+                            MakeIndentation(level, indentStack, indentChars[indentStyle]),
+                            node.Label.PadRight(totalMaxLabelLength + (totalMaxLevel - level) * indentWidth),
+                            node.Total.Duration.TotalMilliseconds.ToString("f1", NumberFormatInfo.InvariantInfo).PadLeft(millisecondsWidth, ' '),
+                            (node.Total.DurationTicks / ticksPerMicrosecond).ToString("f1", NumberFormatInfo.InvariantInfo).PadLeft(microsecondsWidth, ' '),
+                            percentage.ToString("p1", NumberFormatInfo.InvariantInfo).PadLeft(percentageWidth, ' '),
+                            node.Samples.Length.ToString().PadLeft(hitCountWidth, ' '),
+                            node.Total.AverageDuration.TotalMilliseconds.ToString("f1", NumberFormatInfo.InvariantInfo).PadLeft(millisecondsWidth, ' '),
+                            (node.Total.AverageDurationTicks / ticksPerMicrosecond).ToString("f1", NumberFormatInfo.InvariantInfo).PadLeft(microsecondsWidth, ' '),
+                            node.Total.MinDuration.TotalMilliseconds.ToString("f1", NumberFormatInfo.InvariantInfo).PadLeft(millisecondsWidth, ' '),
+                            (node.Total.MinDurationTicks / ticksPerMicrosecond).ToString("f1", NumberFormatInfo.InvariantInfo).PadLeft(microsecondsWidth, ' '),
+                            node.Total.MaxDuration.TotalMilliseconds.ToString("f1", NumberFormatInfo.InvariantInfo).PadLeft(millisecondsWidth, ' '),
+                            (node.Total.MaxDurationTicks / ticksPerMicrosecond).ToString("f1", NumberFormatInfo.InvariantInfo).PadLeft(microsecondsWidth, ' '),
+                            MakeHistogram(node)
+                        )
+                    );
+                    level++;
+                },
+                (node, index, count) => { level--; indentStack.Pop(); }
+            );
 
-			lineAction(string.Empty);
+            lineAction(string.Empty);
 
-			#endregion
-		}
+            #endregion
+        }
 
-		private void SerializeBinary(BinaryWriter binaryWriter)
+        private static string histogramChars = ".▁▂▃▄▅▆▇█";
+
+        private string MakeHistogram(ResultNode node)
+        {
+            const int numBuckets = 10;
+
+            var totalCount = node.Samples.Count();
+            var maxSampleTicks = node.Samples.Select(x => x.EndTicks - x.StartTicks).Max();
+            var bucketWidth = maxSampleTicks / (numBuckets - 1);
+
+            var buckets = node.Samples
+                .GroupBy(x => (int)((x.EndTicks - x.StartTicks) / bucketWidth))
+                .Select(g => new { Key = g.Key, Count = g.Count(), })
+                .ToDictionary(x => x.Key, x => (double)x.Count / totalCount);
+
+            var sb = new StringBuilder();
+            for( var i=0;i<numBuckets;i++)
+            {
+                if(!buckets.TryGetValue(i, out double ratio))
+                    ratio = 0.0;
+
+                var index = (int)(ratio * (histogramChars.Length - 1));
+                sb.Append(histogramChars[index]);
+            }
+
+            return sb.ToString();
+        }
+
+        private void SerializeBinary(BinaryWriter binaryWriter)
 		{
 			binaryWriter.Write(binaryFileV2Marker.ToByteArray());
 			rootNode.Serialize(binaryWriter);
