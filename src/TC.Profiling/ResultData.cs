@@ -424,6 +424,8 @@ namespace TC.Profiling
 
             #endregion
 
+            var withHistograms = indentStyle == IndentStyle.Unicode;
+
             #region Write header
 
             const int indentWidth = 3;
@@ -453,11 +455,12 @@ namespace TC.Profiling
                 + millisecondsWidth
                 + 2
                 + microsecondsWidth
+                + (withHistograms ? 2 + numHistogramBuckets : 0)
                 ;
 
             lineAction(
                 string.Format(
-                    "{0}{1}  {2}  {3}  {4}  {5}  {6}  {7}  {8}  {9}  {10}  {11}",
+                    "{0}{1}  {2}  {3}  {4}  {5}  {6}  {7}  {8}  {9}  {10}  {11}{12}",
                     "",
                     "Label".PadRight(totalMaxLabelLength + totalMaxLevel * indentWidth),
                     "ms".PadLeft(millisecondsWidth, ' '),
@@ -469,7 +472,8 @@ namespace TC.Profiling
                     "Min ms".PadLeft(millisecondsWidth, ' '),
                     "Min µs".PadLeft(microsecondsWidth, ' '),
                     "Max ms".PadLeft(millisecondsWidth, ' '),
-                    "Max µs".PadLeft(microsecondsWidth, ' ')
+                    "Max µs".PadLeft(microsecondsWidth, ' '),
+                    withHistograms ? "  Histogram" : string.Empty
                 )
             );
             lineAction("".PadRight(outputWidth, '='));
@@ -492,7 +496,7 @@ namespace TC.Profiling
 
                     lineAction(
                         string.Format(
-                            "{0}{1}  {2}  {3}  {4}  {5}  {6}  {7}  {8}  {9}  {10}  {11}  {12}",
+                            "{0}{1}  {2}  {3}  {4}  {5}  {6}  {7}  {8}  {9}  {10}  {11}{12}",
                             MakeIndentation(level, indentStack, indentChars[indentStyle]),
                             node.Label.PadRight(totalMaxLabelLength + (totalMaxLevel - level) * indentWidth),
                             node.Total.Duration.TotalMilliseconds.ToString("f1", NumberFormatInfo.InvariantInfo).PadLeft(millisecondsWidth, ' '),
@@ -505,7 +509,7 @@ namespace TC.Profiling
                             (node.Total.MinDurationTicks / ticksPerMicrosecond).ToString("f1", NumberFormatInfo.InvariantInfo).PadLeft(microsecondsWidth, ' '),
                             node.Total.MaxDuration.TotalMilliseconds.ToString("f1", NumberFormatInfo.InvariantInfo).PadLeft(millisecondsWidth, ' '),
                             (node.Total.MaxDurationTicks / ticksPerMicrosecond).ToString("f1", NumberFormatInfo.InvariantInfo).PadLeft(microsecondsWidth, ' '),
-                            MakeHistogram(node)
+                            withHistograms ? "  " + MakeHistogram(node) : string.Empty
                         )
                     );
                     level++;
@@ -518,15 +522,18 @@ namespace TC.Profiling
             #endregion
         }
 
+        private const int numHistogramBuckets = 10;
         private static string histogramChars = ".▁▂▃▄▅▆▇█";
 
         private string MakeHistogram(ResultNode node)
         {
-            const int numBuckets = 10;
-
             var totalCount = node.Samples.Count();
+
+            if(totalCount < 2)
+                return string.Empty;
+
             var maxSampleTicks = node.Samples.Select(x => x.EndTicks - x.StartTicks).Max();
-            var bucketWidth = maxSampleTicks / (numBuckets - 1);
+            var bucketWidth = maxSampleTicks / (numHistogramBuckets - 1);
 
             var buckets = node.Samples
                 .GroupBy(x => (int)((x.EndTicks - x.StartTicks) / bucketWidth))
@@ -534,12 +541,12 @@ namespace TC.Profiling
                 .ToDictionary(x => x.Key, x => (double)x.Count / totalCount);
 
             var sb = new StringBuilder();
-            for( var i=0;i<numBuckets;i++)
+            for(var i = 0; i < numHistogramBuckets; i++)
             {
                 if(!buckets.TryGetValue(i, out double ratio))
                     ratio = 0.0;
 
-                var index = (int)(ratio * (histogramChars.Length - 1));
+                var index = Math.Max(0, Math.Min(histogramChars.Length - 1, (int)(ratio * (histogramChars.Length - 1))));
                 sb.Append(histogramChars[index]);
             }
 
