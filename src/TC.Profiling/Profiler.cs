@@ -126,6 +126,8 @@ namespace TC.Profiling
 
 			rawData.NodeStack.Push(node);
 
+            if(rawData.NextSampleIndex < rawData.Samples.Length)
+            {
 			rawData.Samples[rawData.NextSampleIndex].StartTimestamp = timestamp;
 			rawData.Samples[rawData.NextSampleIndex].EndTimestamp = timestamp;
 			rawData.Samples[rawData.NextSampleIndex].StartTicks = ticks;
@@ -134,6 +136,7 @@ namespace TC.Profiling
 			node.SampleIndices.Add(rawData.NextSampleIndex);
 
 			rawData.NextSampleIndex++;
+            }
 
 			resultData = null;
 		}
