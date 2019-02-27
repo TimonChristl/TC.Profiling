@@ -25,3 +25,5 @@
 /src/.vs/TC.Profiling/v14
 /src/packages
 /src/ProfileViewer/obj/Release
+/src/.vs
+/src/TC.Profiling/obj
