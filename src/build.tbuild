@@ -11,7 +11,7 @@
     <Steps>
         <fs:DeleteFiles Directory="${TBuild.ScriptDir}" Pattern="*.nupkg"/>
         <msbuild:MsBuild ProjectFile="${TBuild.ScriptDir}\TC.Profiling.sln" Configuration="Release" Platform="Any CPU" Targets="Restore"/>
-        <msbuild:MsBuild ProjectFile="${TBuild.ScriptDir}\TC.Profilng.sln" Configuration="Release" Platform="Any CPU" Targets="Build"/>
+        <msbuild:MsBuild ProjectFile="${TBuild.ScriptDir}\TC.Profiling.sln" Configuration="Release" Platform="Any CPU" Targets="Build"/>
         <fs:CopyFiles SourceDirectory="${TBuild.ScriptDir}\TC.Profiling\bin\Release\" DestDirectory="${TBuild.ScriptDir}" Recursive="false">
           <fs:Exclude Pattern="*"/>
           <fs:Include Pattern="*.nupkg"/>
