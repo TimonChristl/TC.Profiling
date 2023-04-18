@@ -9,7 +9,7 @@
 $ErrorActionPreference="Stop"
 
 #         ↓↓↓↓↓
-$VERSION="2.1.1"
+$VERSION="2.0.1"
 
 $BUILD_NUMBER = [System.Environment]::GetEnvironmentVariable('BUILD_NUMBER')
 if([String]::IsNullOrEmpty($BUILD_NUMBER)) { $BUILD_NUMBER=999 }
