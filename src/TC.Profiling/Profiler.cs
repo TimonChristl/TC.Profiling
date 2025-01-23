@@ -155,10 +155,13 @@ namespace TC.Profiling
 			DateTime timestamp = DateTime.UtcNow;
 			long ticks = StopwatchTicksToTimeSpanTicks(rawData.Stopwatch.ElapsedTicks);
 
-			int sampleIndex = node.SampleIndices[node.SampleIndices.Count - 1];
+			if(node.SampleIndices.Count > 0)
+			{
+				int sampleIndex = node.SampleIndices[node.SampleIndices.Count - 1];
 
-			rawData.Samples[sampleIndex].EndTimestamp = timestamp;
-			rawData.Samples[sampleIndex].EndTicks = ticks;
+				rawData.Samples[sampleIndex].EndTimestamp = timestamp;
+				rawData.Samples[sampleIndex].EndTicks = ticks;
+			}
 
 			rawData.LabelStack.Pop();
 
