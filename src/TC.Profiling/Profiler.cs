@@ -32,12 +32,13 @@ namespace TC.Profiling
 
 		#region Private fields
 
-		private bool isEnabled;
-		private int maxSamples;
-
-		private RawData rawData;
-
+#if NET8_0_OR_GREATER
+        private readonly RawData? rawData;
+        private ResultData? resultData;
+#else
+		private readonly RawData rawData;
 		private ResultData resultData;
+#endif
 
 		#endregion
 
@@ -52,10 +53,8 @@ namespace TC.Profiling
 		/// <param name="maxSamples"></param>
 		public Profiler(bool isEnabled = true, int maxSamples = 1024 * 1024)
 		{
-			this.isEnabled = isEnabled;
-			this.maxSamples = maxSamples;
-
-			Clear();
+            if(isEnabled)
+                rawData = new RawData(maxSamples);
 		}
 
 		#endregion
@@ -68,16 +67,12 @@ namespace TC.Profiling
 		/// </summary>
 		public void Clear()
 		{
-			if(!isEnabled)
-				return;
-
-			if(this.rawData == null)
-				this.rawData = new RawData(maxSamples);
-			else
-				this.rawData.Clear();
-
-			this.resultData = null;
+            if(rawData != null)
+            {
+                rawData.Clear();
+                resultData = null;
 		}
+        }
 
 		/// <summary>
 		/// Starts collection of raw data by creating the root node.
@@ -85,7 +80,7 @@ namespace TC.Profiling
 		/// </summary>
 		public void Start()
 		{
-			if(!isEnabled)
+            if(rawData == null)
 				return;
 
 			rawData.Stopwatch = Stopwatch.StartNew();
@@ -99,7 +94,7 @@ namespace TC.Profiling
 		/// </summary>
 		public void Stop()
 		{
-			if(!isEnabled)
+            if(rawData == null)
 				return;
 
 			End();
@@ -114,7 +109,7 @@ namespace TC.Profiling
 		/// <param name="label"></param>
 		public void Begin(string label)
 		{
-			if(!isEnabled)
+            if(rawData == null)
 				return;
 
 			DateTime timestamp = DateTime.UtcNow;
@@ -122,8 +117,13 @@ namespace TC.Profiling
 
 			rawData.LabelStack.Push(label);
 
-			RawNode node = EnsureRawNodesForPath(rawData.LabelStack);
+#if NET8_0_OR_GREATER
+            RawNode? node = EnsureRawNodesForPath(rawData, rawData.LabelStack);
+#else
+			RawNode node = EnsureRawNodesForPath(rawData, rawData.LabelStack);
+#endif
 
+            if(node != null)
 			rawData.NodeStack.Push(node);
 
             if(rawData.NextSampleIndex < rawData.Samples.Length)
@@ -133,7 +133,7 @@ namespace TC.Profiling
 			rawData.Samples[rawData.NextSampleIndex].StartTicks = ticks;
 			rawData.Samples[rawData.NextSampleIndex].EndTicks = ticks;
 
-			node.SampleIndices.Add(rawData.NextSampleIndex);
+                node?.SampleIndices.Add(rawData.NextSampleIndex);
 
 			rawData.NextSampleIndex++;
             }
@@ -147,7 +147,7 @@ namespace TC.Profiling
 		/// </summary>
 		public void End()
 		{
-			if(!isEnabled)
+            if(rawData == null)
 				return;
 
 			RawNode node = rawData.NodeStack.Pop();
@@ -157,7 +157,11 @@ namespace TC.Profiling
 
 			if(node.SampleIndices.Count > 0)
 			{
+#if NET8_0_OR_GREATER
+                int sampleIndex = node.SampleIndices[^1];
+#else
 				int sampleIndex = node.SampleIndices[node.SampleIndices.Count - 1];
+#endif
 
 				rawData.Samples[sampleIndex].EndTimestamp = timestamp;
 				rawData.Samples[sampleIndex].EndTicks = ticks;
@@ -177,12 +181,21 @@ namespace TC.Profiling
             return stopwatchTicks * (10 * 1000 * 1000) / Stopwatch.Frequency;
         }
 
-        private RawNode EnsureRawNodesForPath(IEnumerable<string> labelStack)
+#if NET8_0_OR_GREATER
+        private static RawNode? EnsureRawNodesForPath(RawData rawData, IEnumerable<string> labelStack)
+#else
+		private static RawNode EnsureRawNodesForPath(RawData rawData, IEnumerable<string> labelStack)
+#endif
 		{
 			List<RawNode> children = new List<RawNode>();
 			if(rawData.RootNode != null)
 				children.Add(rawData.RootNode);
+
+#if NET8_0_OR_GREATER
+            RawNode? currentNode = rawData.RootNode;
+#else
 			RawNode currentNode = rawData.RootNode;
+#endif
 
 			foreach(string label in labelStack.Reverse())
 			{
@@ -207,19 +220,12 @@ namespace TC.Profiling
 			return currentNode;
 		}
 
-		private void MakeResultData()
-		{
-			this.resultData = this.rawData != null
-				? new ResultData(MakeResultNode(this.rawData.RootNode))
-				: new ResultData();
-		}
-
-		private ResultNode MakeResultNode(RawNode rawNode)
+        private static ResultNode MakeResultNode(RawData rawData, RawNode rawNode)
 		{
 			ResultNode[] children = new ResultNode[rawNode.Children.Count];
 
 			for(int i = 0; i < rawNode.Children.Count; i++)
-				children[i] = MakeResultNode(rawNode.Children[i]);
+                children[i] = MakeResultNode(rawData, rawNode.Children[i]);
 
 			ResultSample[] samples = new ResultSample[rawNode.SampleIndices.Count];
 
@@ -237,7 +243,7 @@ namespace TC.Profiling
 			);
 		}
 
-		private ResultSample MakeResultSample(RawSample rawSample)
+        private static ResultSample MakeResultSample(RawSample rawSample)
 		{
 			TimeSpan duration = rawSample.EndTimestamp - rawSample.StartTimestamp;
 			long durationTicks = rawSample.EndTicks - rawSample.StartTicks;
@@ -245,7 +251,7 @@ namespace TC.Profiling
 			return new ResultSample(rawSample.StartTimestamp, rawSample.EndTimestamp, duration, rawSample.StartTicks, rawSample.EndTicks, durationTicks);
 		}
 
-		private ResultTotalSample MakeResultTotalSample(ResultNode[] children, ResultSample[] samples)
+        private static ResultTotalSample MakeResultTotalSample(ResultNode[] children, ResultSample[] samples)
 		{
 			DateTime startTimestamp = DateTime.MaxValue;
 			DateTime endTimestamp = DateTime.MinValue;
@@ -320,19 +326,23 @@ namespace TC.Profiling
 		/// is not recalculated until the next call to <see cref="Begin"/>, <see cref="End"/>, <see cref="Start"/>, <see cref="Stop"/>
 		/// or <see cref="Clear"/>.
 		/// </remarks>
+#if NET8_0_OR_GREATER
+        public ResultData? ResultData
+#else
 		public ResultData ResultData
+#endif
 		{
 			get
 			{
 				if(resultData == null)
-					MakeResultData();
+                    resultData = rawData?.RootNode != null
+                        ? new ResultData(MakeResultNode(rawData, rawData.RootNode))
+                        : new ResultData();
 
 				return resultData;
 			}
 		}
 
 		#endregion
-
 	}
-
 }
