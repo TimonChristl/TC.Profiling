@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-      <TargetFrameworks>netstandard2.0</TargetFrameworks>
-      <Version>2.1.0</Version>
+		<TargetFrameworks>netstandard2.0;net8.0</TargetFrameworks>
+		<Version>2.2.0</Version>
       <Authors></Authors>
       <Copyright>©2015-2025 by Timon Christl</Copyright>
       <PackageProjectUrl>https://github.com/TimonChristl/TC.Profiling</PackageProjectUrl>
