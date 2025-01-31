@@ -22,11 +22,13 @@ namespace TC.Profiling
 		/// <inheritdoc/>
 		public ResultDataBinaryFileFormatException(string message, Exception inner) : base(message, inner) { }
 
+#if !NET8_0_OR_GREATER
 		/// <inheritdoc/>
 		protected ResultDataBinaryFileFormatException(
 		  System.Runtime.Serialization.SerializationInfo info,
 		  System.Runtime.Serialization.StreamingContext context)
 			: base(info, context) { }
+#endif
 	}
 
 }

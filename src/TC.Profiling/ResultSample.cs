@@ -17,12 +17,12 @@ namespace TC.Profiling
 
 		#region Private fields
 
-		private DateTime startTimestamp;
-		private DateTime endTimestamp;
-		private TimeSpan duration;
-		private long startTicks;
-		private long endTicks;
-		private long durationTicks;
+		private readonly DateTime startTimestamp;
+		private readonly DateTime endTimestamp;
+		private readonly TimeSpan duration;
+		private readonly long startTicks;
+		private readonly long endTicks;
+		private readonly long durationTicks;
 
 		#endregion
 
@@ -30,12 +30,12 @@ namespace TC.Profiling
 
 		internal ResultSample()
 		{
-			this.startTimestamp = DateTime.MinValue;
-			this.endTimestamp = DateTime.MinValue;
-			this.duration = TimeSpan.Zero;
-			this.startTicks = 0;
-			this.endTicks = 0;
-			this.durationTicks = 0;
+			startTimestamp = DateTime.MinValue;
+			endTimestamp = DateTime.MinValue;
+			duration = TimeSpan.Zero;
+			startTicks = 0;
+			endTicks = 0;
+			durationTicks = 0;
 		}
 
 		internal ResultSample(DateTime startTimestamp, DateTime endTimestamp, TimeSpan duration, long startTicks, long endTicks, long durationTicks)

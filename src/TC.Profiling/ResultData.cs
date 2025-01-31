@@ -8,6 +8,11 @@ using System.Text;
 using System.Xml.Linq;
 using TC.Logging;
 
+#if NET8_0_OR_GREATER
+#pragma warning disable IDE0063
+#pragma warning disable IDE0305
+#endif
+
 namespace TC.Profiling
 {
 
@@ -19,13 +24,21 @@ namespace TC.Profiling
 
 		#region Private fields
 
-		private ResultNode rootNode;
+		private readonly ResultNode rootNode;
 
+#if NET8_0_OR_GREATER
+        private static readonly Guid binaryFileV2Marker = new("{F19C921C-35EC-4BBE-948B-59B6AC78A86A}");
+#else
 		private static readonly Guid binaryFileV2Marker = new Guid("{F19C921C-35EC-4BBE-948B-59B6AC78A86A}");
+#endif
 
-        private static readonly Dictionary<IndentStyle, string[]> indentChars = new Dictionary<IndentStyle, string[]>()
+#if NET8_0_OR_GREATER
+        private static readonly Dictionary<IndentStyle, string[]> indentChars = new()
+#else
+		private static readonly Dictionary<IndentStyle, string[]> indentChars = new Dictionary<IndentStyle, string[]>()
+#endif
 		{
-			{
+            {
 				IndentStyle.Unicode,
 				new string[] { "└─ ", "├─ ", "   ", "│  " }
 			},
@@ -60,10 +73,10 @@ namespace TC.Profiling
 		/// <param name="indentStyle"></param>
 		public void ToFileAsText(string filename, IndentStyle indentStyle = IndentStyle.Unicode)
 		{
-			using(FileStream stream = File.Open(filename, FileMode.Create, FileAccess.Write, FileShare.Read))
-			using(StreamWriter streamWriter = new StreamWriter(stream, Encoding.UTF8))
+			using(var stream = File.Open(filename, FileMode.Create, FileAccess.Write, FileShare.Read))
+			using(var streamWriter = new StreamWriter(stream, Encoding.UTF8))
 			{
-				Serialize((line) => streamWriter.WriteLine(line), indentStyle);
+				Serialize(streamWriter.WriteLine, indentStyle);
 			}
 		}
 
@@ -74,9 +87,9 @@ namespace TC.Profiling
 		/// <param name="indentStyle"></param>
 		public void ToStreamAsText(Stream stream, IndentStyle indentStyle = IndentStyle.Unicode)
 		{
-			using(StreamWriter streamWriter = new StreamWriter(stream, Encoding.UTF8, 4096, true))
+			using(var streamWriter = new StreamWriter(stream, Encoding.UTF8, 4096, true))
 			{
-				Serialize((line) => streamWriter.WriteLine(line), indentStyle);
+				Serialize(streamWriter.WriteLine, indentStyle);
 			}
 		}
 
@@ -87,18 +100,17 @@ namespace TC.Profiling
 		/// <param name="indentStyle"></param>
 		public void ToStreamWriterAsText(StreamWriter streamWriter, IndentStyle indentStyle = IndentStyle.Unicode)
 		{
-			Serialize((line) => streamWriter.WriteLine(line), indentStyle);
+			Serialize(streamWriter.WriteLine, indentStyle);
 		}
 
         /// <summary>
         /// Writes result data in binary format to a file.
         /// </summary>
         /// <param name="filename"></param>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times")]
         public void ToFileAsBinary(string filename)
 		{
-			using(FileStream stream = File.Open(filename, FileMode.Create, FileAccess.Write, FileShare.Read))
-			using(BinaryWriter binaryWriter = new BinaryWriter(stream))
+			using(var stream = File.Open(filename, FileMode.Create, FileAccess.Write, FileShare.Read))
+			using(var binaryWriter = new BinaryWriter(stream))
 			{
 				SerializeBinary(binaryWriter);
 			}
@@ -110,7 +122,7 @@ namespace TC.Profiling
 		/// <param name="stream"></param>
 		public void ToStreamAsBinary(Stream stream)
 		{
-			using(BinaryWriter binaryWriter = new BinaryWriter(stream, Encoding.UTF8, true))
+			using(var binaryWriter = new BinaryWriter(stream, Encoding.UTF8, true))
 			{
 				SerializeBinary(binaryWriter);
 			}
@@ -121,13 +133,12 @@ namespace TC.Profiling
         /// </summary>
         /// <param name="filename"></param>
         /// <returns></returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times")]
         public static ResultData FromFileAsBinary(string filename)
 		{
-			using(FileStream stream = File.Open(filename, FileMode.Open, FileAccess.Read, FileShare.Read))
-			using(BinaryReader binaryReader = new BinaryReader(stream, Encoding.UTF8))
+			using(var stream = File.Open(filename, FileMode.Open, FileAccess.Read, FileShare.Read))
+			using(var binaryReader = new BinaryReader(stream, Encoding.UTF8))
 			{
-				return ResultData.UnserializeBinary(binaryReader);
+				return UnserializeBinary(binaryReader);
 			}
 		}
 
@@ -138,9 +149,9 @@ namespace TC.Profiling
 		/// <returns></returns>
 		public static ResultData FromStreamAsBinary(Stream stream)
 		{
-			using(BinaryReader binaryReader = new BinaryReader(stream, Encoding.UTF8, true))
+			using(var binaryReader = new BinaryReader(stream, Encoding.UTF8, true))
 			{
-				return ResultData.UnserializeBinary(binaryReader);
+				return UnserializeBinary(binaryReader);
 			}
 		}
 
@@ -153,7 +164,7 @@ namespace TC.Profiling
 		/// <param name="indentStyle"></param>
 		public void ToLogger(string label, TC.Logging.Severity severity, TC.Logging.Logger logger, IndentStyle indentStyle = IndentStyle.Unicode)
 		{
-			StringBuilder sb = new StringBuilder();
+			var sb = new StringBuilder();
 
 			Serialize((line) => sb.AppendLine(line), indentStyle);
 
@@ -176,7 +187,7 @@ namespace TC.Profiling
 		/// <returns></returns>
 		public string ToString(IndentStyle indentStyle)
 		{
-			StringBuilder sb = new StringBuilder();
+			var sb = new StringBuilder();
 
 			Serialize((line) => sb.AppendLine(line), indentStyle);
 
@@ -189,9 +200,9 @@ namespace TC.Profiling
 		/// <returns></returns>
 		public string ToJson()
 		{
-			StringBuilder sb = new StringBuilder();
+			var sb = new StringBuilder();
 
-			sb.Append("{");
+			sb.Append('{');
 			sb.AppendLine();
 
 			sb.Append("    \"Root\" :");
@@ -205,13 +216,13 @@ namespace TC.Profiling
 					string indentation = string.Empty.PadRight(4 * level, ' ');
 
 					sb.Append(indentation);
-					sb.Append("{");
+					sb.Append('{');
 					sb.AppendLine();
 
 					sb.Append(indentation);
 					sb.Append("    \"Id\" : ");
 					sb.Append(node.Id);
-					sb.Append(",");
+					sb.Append(',');
 					sb.AppendLine();
 
 					sb.Append(indentation);
@@ -245,13 +256,13 @@ namespace TC.Profiling
 						sb.Append(indentation);
 						sb.Append("            \"DurationTicks\" : ");
 						sb.Append(sample.DurationTicks.ToString(NumberFormatInfo.InvariantInfo));
-						sb.Append(",");
+						sb.Append(',');
 						sb.AppendLine();
 
 						sb.Append(indentation);
 						sb.Append("            \"EndTicks\" : ");
 						sb.Append(sample.EndTicks.ToString(NumberFormatInfo.InvariantInfo));
-						sb.Append(",");
+						sb.Append(',');
 						sb.AppendLine();
 
 						sb.Append(indentation);
@@ -263,19 +274,19 @@ namespace TC.Profiling
 						sb.Append(indentation);
 						sb.Append("            \"StartTicks\" : ");
 						sb.Append(sample.StartTicks.ToString(NumberFormatInfo.InvariantInfo));
-						sb.Append(",");
+						sb.Append(',');
 						sb.AppendLine();
 
 						sb.Append(indentation);
 						sb.Append("            \"StartTimestamp\" : \"");
 						sb.Append(FormatDateTimeForJson(sample.StartTimestamp));
-						sb.Append("\"");
+						sb.Append('"');
 						sb.AppendLine();
 
 						sb.Append(indentation);
 						sb.Append("        }");
 						if(i < node.Samples.Length - 1)
-							sb.Append(",");
+							sb.Append(',');
 						sb.AppendLine();
 					}
 
@@ -296,7 +307,7 @@ namespace TC.Profiling
 					sb.Append(indentation);
 					sb.Append("        \"AverageDurationTicks\" : ");
 					sb.Append(node.Total.AverageDurationTicks.ToString(NumberFormatInfo.InvariantInfo));
-					sb.Append(",");
+					sb.Append(',');
 					sb.AppendLine();
 
 					sb.Append(indentation);
@@ -308,13 +319,13 @@ namespace TC.Profiling
 					sb.Append(indentation);
 					sb.Append("        \"DurationTicks\" : ");
 					sb.Append(node.Total.DurationTicks.ToString(NumberFormatInfo.InvariantInfo));
-					sb.Append(",");
+					sb.Append(',');
 					sb.AppendLine();
 
 					sb.Append(indentation);
 					sb.Append("        \"EndTicks\" : ");
 					sb.Append(node.Total.EndTicks.ToString(NumberFormatInfo.InvariantInfo));
-					sb.Append(",");
+					sb.Append(',');
 					sb.AppendLine();
 
 					sb.Append(indentation);
@@ -332,7 +343,7 @@ namespace TC.Profiling
 					sb.Append(indentation);
 					sb.Append("        \"MaxDurationTicks\" : ");
 					sb.Append(node.Total.MaxDurationTicks.ToString(NumberFormatInfo.InvariantInfo));
-					sb.Append(",");
+					sb.Append(',');
 					sb.AppendLine();
 
 					sb.Append(indentation);
@@ -344,19 +355,19 @@ namespace TC.Profiling
 					sb.Append(indentation);
 					sb.Append("        \"MinDurationTicks\" : ");
 					sb.Append(node.Total.MinDurationTicks.ToString(NumberFormatInfo.InvariantInfo));
-					sb.Append(",");
+					sb.Append(',');
 					sb.AppendLine();
 
 					sb.Append(indentation);
 					sb.Append("        \"StartTicks\" : ");
 					sb.Append(node.Total.StartTicks.ToString(NumberFormatInfo.InvariantInfo));
-					sb.Append(",");
+					sb.Append(',');
 					sb.AppendLine();
 
 					sb.Append(indentation);
 					sb.Append("        \"StartTimestamp\" : \"");
 					sb.Append(FormatDateTimeForJson(node.Total.StartTimestamp));
-					sb.Append("\"");
+					sb.Append('"');
 					sb.AppendLine();
 
 					sb.Append(indentation);
@@ -384,9 +395,9 @@ namespace TC.Profiling
 					sb.AppendLine();
 
 					sb.Append(indentation);
-					sb.Append("}");
+					sb.Append('}');
 					if(index < count - 1)
-						sb.Append(",");
+						sb.Append(',');
 					sb.AppendLine();
 				}
 			);
@@ -483,7 +494,7 @@ namespace TC.Profiling
             #region Write body
 
             level = 0;
-            Stack<bool> indentStack = new Stack<bool>();
+            var indentStack = new Stack<bool>();
 
             double ticksPerMicrosecond = 10.0;
 
@@ -523,11 +534,11 @@ namespace TC.Profiling
         }
 
         private const int numHistogramBuckets = 10;
-        private static string histogramChars = ".▁▂▃▄▅▆▇█";
+        private const string histogramChars = ".▁▂▃▄▅▆▇█";
 
-        private string MakeHistogram(ResultNode node)
+        private static string MakeHistogram(ResultNode node)
         {
-            var totalCount = node.Samples.Count();
+            var totalCount = node.Samples.Length;
 
             if(totalCount < 2)
                 return string.Empty;
@@ -537,7 +548,7 @@ namespace TC.Profiling
 
             var buckets = node.Samples
                 .GroupBy(x => (int)((x.EndTicks - x.StartTicks) / bucketWidth))
-                .Select(g => new { Key = g.Key, Count = g.Count(), })
+                .Select(g => new { g.Key, Count = g.Count(), })
                 .ToDictionary(x => x.Key, x => (double)x.Count / totalCount);
 
             var sb = new StringBuilder();
@@ -564,7 +575,7 @@ namespace TC.Profiling
 			byte[] marker = new byte[16];
 
 			binaryReader.Read(marker, 0, 16);
-			Guid readGuid = new Guid(marker);
+			var readGuid = new Guid(marker);
 			if(readGuid != binaryFileV2Marker)
 				throw new ResultDataBinaryFileFormatException();
 
@@ -578,7 +589,7 @@ namespace TC.Profiling
 			TraverseCore(rootNode, 0, 1, preAction, postAction);
 		}
 
-		private void TraverseCore(ResultNode node, int index, int count, Action<ResultNode, int, int> preAction, Action<ResultNode, int, int> postAction)
+		private static void TraverseCore(ResultNode node, int index, int count, Action<ResultNode, int, int> preAction, Action<ResultNode, int, int> postAction)
 		{
 			preAction(node, index, count);
 
@@ -588,11 +599,11 @@ namespace TC.Profiling
 			postAction(node, index, count);
 		}
 
-		private string MakeIndentation(int level, Stack<bool> indentStack, string[] indentStrings)
+		private static string MakeIndentation(int level, Stack<bool> indentStack, string[] indentStrings)
 		{
-			StringBuilder sb = new StringBuilder();
+			var sb = new StringBuilder();
 
-			bool[] bs = indentStack.ToArray();
+            bool[] bs = indentStack.ToArray();
 
 			for(int i = 0; i < level; i++)
 			{
@@ -612,7 +623,7 @@ namespace TC.Profiling
 			return sb.ToString();
 		}
 
-		private string FormatDateTimeForJson(DateTime dateTime)
+		private static string FormatDateTimeForJson(DateTime dateTime)
 		{
 			return string.Format(
 				@"{0}-{1}-{2} {3}:{4}:{5}.{6}",
@@ -626,7 +637,7 @@ namespace TC.Profiling
 			);
 		}
 
-		private string FormatTimeSpanForJson(TimeSpan timeSpan)
+		private static string FormatTimeSpanForJson(TimeSpan timeSpan)
 		{
 			return string.Format(
 				@"{0}:{1}:{2}.{3}",
