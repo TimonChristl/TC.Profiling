@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
-		<TargetFrameworks>netstandard2.0;net8.0</TargetFrameworks>
-		<Version>2.2.0</Version>
+		<TargetFrameworks>netstandard2.0;net8.0;net10.0</TargetFrameworks>
+		<Version>2.2.1</Version>
 		<Authors></Authors>
-		<Copyright>©2015-2025 by Timon Christl</Copyright>
+		<Copyright>©2015-2026 by Timon Christl</Copyright>
 		<PackageProjectUrl>https://github.com/TimonChristl/TC.Profiling</PackageProjectUrl>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
@@ -16,6 +16,9 @@
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 	</PropertyGroup>
 	<PropertyGroup Condition="$(TargetFramework) == 'net8.0'">
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
+	<PropertyGroup Condition="$(TargetFramework) == 'net10.0'">
 		<Nullable>enable</Nullable>
 	</PropertyGroup>
 	<ItemGroup>
