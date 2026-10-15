@@ -15,13 +15,13 @@ namespace TC.Profiling
 
 		#region Private fields
 
-		private TimeSpan averageDuration;
-		private TimeSpan minDuration;
-		private TimeSpan maxDuration;
+		private readonly TimeSpan averageDuration;
+		private readonly TimeSpan minDuration;
+		private readonly TimeSpan maxDuration;
 
-		private long averageDurationTicks;
-		private long minDurationTicks;
-		private long maxDurationTicks;
+		private readonly long averageDurationTicks;
+		private readonly long minDurationTicks;
+		private readonly long maxDurationTicks;
 
 		#endregion
 
@@ -29,13 +29,13 @@ namespace TC.Profiling
 
 		internal ResultTotalSample()
 		{
-			this.averageDuration = TimeSpan.Zero;
-			this.minDuration = TimeSpan.Zero;
-			this.maxDuration = TimeSpan.Zero;
+            averageDuration = TimeSpan.Zero;
+			minDuration = TimeSpan.Zero;
+			maxDuration = TimeSpan.Zero;
 
-			this.averageDurationTicks = 0;
-			this.minDurationTicks = 0;
-			this.maxDurationTicks = 0;
+			averageDurationTicks = 0;
+			minDurationTicks = 0;
+			maxDurationTicks = 0;
 		}
 
 		internal ResultTotalSample(DateTime startTimestamp, DateTime endTimestamp, TimeSpan duration, long startTicks, long endTicks, long durationTicks, TimeSpan averageDuration, TimeSpan minDuration, TimeSpan maxDuration, long averageDurationTicks, long minDurationTicks, long maxDurationTicks)

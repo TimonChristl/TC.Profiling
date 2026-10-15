@@ -17,11 +17,11 @@ namespace TC.Profiling
 
 		#region Private fields
 
-		private int id;
-		private string label;
-		private ResultTotalSample total;
-		private ResultSample[] samples;
-		private ResultNode[] children;
+		private readonly int id;
+		private readonly string label;
+		private readonly ResultTotalSample total;
+		private readonly ResultSample[] samples;
+		private readonly ResultNode[] children;
 
 		#endregion
 
@@ -29,14 +29,19 @@ namespace TC.Profiling
 
 		internal ResultNode()
 		{
-			this.id = 0;
-			this.label = string.Empty;
-			this.total = new ResultTotalSample();
-			this.samples = new ResultSample[0];
-			this.children = new ResultNode[0];
-		}
+			id = 0;
+			label = string.Empty;
+			total = new ResultTotalSample();
+#if NET8_0_OR_GREATER
+            samples = [];
+            children = [];
+#else
+			samples = new ResultSample[0];
+			children = new ResultNode[0];
+#endif
+        }
 
-		internal ResultNode(int id, string label, ResultTotalSample total, ResultSample[] samples, ResultNode[] children)
+        internal ResultNode(int id, string label, ResultTotalSample total, ResultSample[] samples, ResultNode[] children)
 		{
 			this.id = id;
 			this.label = label;
