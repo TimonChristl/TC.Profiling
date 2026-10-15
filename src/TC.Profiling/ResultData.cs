@@ -533,7 +533,10 @@ namespace TC.Profiling
                 return string.Empty;
 
             var maxSampleTicks = node.Samples.Select(x => x.EndTicks - x.StartTicks).Max();
+
             var bucketWidth = maxSampleTicks / (numHistogramBuckets - 1);
+            if(bucketWidth == 0)
+                return string.Empty;
 
             var buckets = node.Samples
                 .GroupBy(x => (int)((x.EndTicks - x.StartTicks) / bucketWidth))
